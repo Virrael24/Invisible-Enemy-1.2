@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -12,22 +11,28 @@ public class PickupManager : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
     public Image itemIcon;
-
-    [Header("Кнопки")]
     public Button closeButton;
     public Button takeButton;
 
-    [Header("Инвентарь")]
     public InventorySO inventory;
 
     private WorldItem currentWorldItem;
 
     private void Awake()
     {
-        Instance = this;
-        menuPanel.SetActive(false);
+        // Проверка на дубликаты
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-        // Назначаем функции кнопкам программно
+        if (menuPanel != null) menuPanel.SetActive(false);
+
         closeButton.onClick.AddListener(CloseMenu);
         takeButton.onClick.AddListener(TakeItem);
     }
@@ -35,46 +40,38 @@ public class PickupManager : MonoBehaviour
     public void OpenMenu(WorldItem worldItem)
     {
         currentWorldItem = worldItem;
-        ItemData data = worldItem.itemData;
 
-        // Заполняем данные
-        nameText.text = data.itemName;
-        descriptionText.text = data.description;
-        itemIcon.sprite = data.icon;
+        nameText.text = worldItem.itemData.itemName;
+        descriptionText.text = worldItem.itemData.description;
+        itemIcon.sprite = worldItem.itemData.icon;
 
+        // ВАЖНО: Принудительно включаем панель
         menuPanel.SetActive(true);
 
-        // Включаем курсор, чтобы нажать кнопки
-        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        Debug.Log("PickupManager: Открываю панель для " + worldItem.itemData.itemName);
     }
 
     public void CloseMenu()
     {
-        menuPanel.SetActive(false);
+        if (menuPanel != null) menuPanel.SetActive(false);
         currentWorldItem = null;
 
-        // Возвращаем курсор в игру (опционально, зависит от вашего управления)
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        // Передаем управление курсором глобальному менеджеру или блокируем здесь
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void TakeItem()
     {
         if (currentWorldItem != null && inventory != null)
         {
-            // Пробуем добавить в инвентарь
-            bool wasAdded = inventory.AddItem(currentWorldItem.itemData);
-
-            if (wasAdded)
+            if (inventory.AddItem(currentWorldItem.itemData))
             {
-                // Если место было, удаляем объект со сцены
                 Destroy(currentWorldItem.gameObject);
                 CloseMenu();
-            }
-            else
-            {
-                Debug.Log("Нет места в инвентаре!");
             }
         }
     }
