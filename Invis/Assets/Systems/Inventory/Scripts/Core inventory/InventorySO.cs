@@ -18,6 +18,11 @@ public class InventorySO : ScriptableObject
         }
     }
 
+    public void Refresh()
+    {
+        OnInventoryChanged?.Invoke();
+    }
+
     public bool AddItem(ItemData item)
     {
         for (int i = 0; i < slots.Length; i++)

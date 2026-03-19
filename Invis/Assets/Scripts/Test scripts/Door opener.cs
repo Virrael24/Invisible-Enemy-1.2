@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class Dooropener : MonoBehaviour
 {
@@ -11,22 +8,50 @@ public class Dooropener : MonoBehaviour
     public TextMeshProUGUI Hint;
     public KeyCode RemoveDoors = KeyCode.E;
 
-    private void OnTriggerEnter(Collider other)
+    private bool isPlayerInside = false; // Флаг: внутри ли игрок
+
+    void Start()
     {
-        Hint.gameObject.SetActive(true);
-       
+        if (Hint != null) Hint.gameObject.SetActive(false);
     }
-    private void OnTriggerStay(Collider other)
+
+    private void Update()
     {
-        if (Input.GetKeyDown(RemoveDoors))
+        // Проверяем нажатие кнопки каждое мгновение, но только если игрок внутри
+        if (isPlayerInside && Input.GetKeyDown(RemoveDoors))
         {
-            DoorOne.SetActive(false);
-            DoorTwo.SetActive(false);
+            OpenDoors();
         }
     }
- 
+
+    private void OpenDoors()
+    {
+        if (DoorOne != null) DoorOne.SetActive(false);
+        if (DoorTwo != null) DoorTwo.SetActive(false);
+
+        // Выключаем подсказку после открытия
+        if (Hint != null) Hint.gameObject.SetActive(false);
+
+        // Можно выключить сам скрипт или триггер, чтобы он больше не работал
+        this.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Проверяем, что это именно игрок (желательно по тегу)
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = true;
+            if (Hint != null) Hint.gameObject.SetActive(true);
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
-        Hint.gameObject.SetActive(false); 
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = false;
+            if (Hint != null) Hint.gameObject.SetActive(false);
+        }
     }
 }
