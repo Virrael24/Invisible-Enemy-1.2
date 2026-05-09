@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-// Добавляем интерфейсы выделения (для клавиатуры)
 public class InventorySlotUI : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler,
-    ISelectHandler, IDeselectHandler
+    ISelectHandler, IDeselectHandler, IPointerClickHandler // Добавили интерфейс клика
 {
     [SerializeField] private Image iconImage;
     private ItemData currentItem;
@@ -24,13 +23,33 @@ public class InventorySlotUI : MonoBehaviour,
         }
     }
 
-    // Сбрасываем тултип при уходе курсора или потере фокуса
-    public void OnPointerExit(PointerEventData eventData) => HideTooltip();
-    public void OnDeselect(BaseEventData eventData) => HideTooltip();
+    // Метод клика по ячейке
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (currentItem == null) return;
 
-    // Показываем тултип при наведении или выделении стрелками
+        DialogueManager dialManager = FindObjectOfType<DialogueManager>();
+
+        // Проверяем: если сейчас открыт диалог, то предмет "показываем"
+        if (dialManager != null && dialManager.dialoguePanel.activeSelf)
+        {
+            dialManager.ReceiveItemFromInventory(currentItem);
+        }
+        else
+        {
+            // Обычная логика использования предмета вне диалога
+            Debug.Log("Использован предмет: " + currentItem.itemName);
+            // currentItem.Use(); // Раскомментируйте, если в ItemData есть метод Use
+        }
+    }
+
+    // --- Логика Тултипов (сохранена как была) ---
+
     public void OnPointerEnter(PointerEventData eventData) => ShowTooltip();
     public void OnSelect(BaseEventData eventData) => ShowTooltip();
+
+    public void OnPointerExit(PointerEventData eventData) => HideTooltip();
+    public void OnDeselect(BaseEventData eventData) => HideTooltip();
 
     private void ShowTooltip()
     {

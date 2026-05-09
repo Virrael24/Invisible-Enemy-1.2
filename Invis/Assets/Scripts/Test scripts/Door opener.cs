@@ -6,6 +6,7 @@ public class Dooropener : MonoBehaviour
     public GameObject DoorOne;
     public GameObject DoorTwo;
     public TextMeshProUGUI Hint;
+    public string HintText = "";
     public KeyCode RemoveDoors = KeyCode.E;
 
     private bool isPlayerInside = false; // Флаг: внутри ли игрок
@@ -38,7 +39,7 @@ public class Dooropener : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Проверяем, что это именно игрок (желательно по тегу)
+        Hint.text = HintText;
         if (other.CompareTag("Player"))
         {
             isPlayerInside = true;

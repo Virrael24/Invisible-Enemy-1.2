@@ -11,6 +11,8 @@ namespace HeneGames.DialogueSystem
         private float coolDownTimer;
         private bool dialogueIsOn;
         private DialogueTrigger dialogueTrigger;
+        [Header("NPC Interaction")]
+        [SerializeField] private NPCPathfinding _npc;
 
         public enum TriggerState
         {
@@ -29,6 +31,19 @@ namespace HeneGames.DialogueSystem
         [Header("Dialogue")]
         [SerializeField] private TriggerState triggerState;
         [SerializeField] private List<NPC_Centence> sentences = new List<NPC_Centence>();
+
+        private void Start()
+        {
+            // Автоматически найти NPC, если не назначен
+            if (_npc == null)
+            {
+                _npc = GetComponentInParent<NPCPathfinding>();
+                if (_npc == null)
+                {
+                    _npc = FindObjectOfType<NPCPathfinding>();
+                }
+            }
+        }
 
         private void Update()
         {
@@ -170,7 +185,19 @@ namespace HeneGames.DialogueSystem
         public void StartDialogue()
         {
             //Start event
-            if(dialogueTrigger != null)
+
+            if (_npc != null)
+            {
+                _npc.StartDialogue();
+            }
+
+            // Остальной код...
+            currentSentence = 0;
+            ShowCurrentSentence();
+            PlaySound(sentences[currentSentence].sentenceSound);
+            coolDownTimer = sentences[currentSentence].skipDelayTime;
+
+            if (dialogueTrigger != null)
             {
                 dialogueTrigger.startDialogueEvent.Invoke();
             }
@@ -236,6 +263,22 @@ namespace HeneGames.DialogueSystem
         public void StopDialogue()
         {
             //Stop dialogue event
+            if (_npc != null)
+            {
+                _npc.EndDialogue();
+            }
+
+            // Остальной код...
+            DialogueUI.instance.ClearText();
+
+            if (audioSource != null)
+            {
+                audioSource.Stop();
+            }
+
+            dialogueIsOn = false;
+            dialogueTrigger = null;
+
             if (dialogueTrigger != null)
             {
                 dialogueTrigger.endDialogueEvent.Invoke();
