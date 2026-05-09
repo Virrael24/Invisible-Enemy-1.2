@@ -34,6 +34,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(DialogueNode node, NPC npc)
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         _currentNPC = npc; // Сохраняем ссылку на NPC, с которым говорим
         _currentNode = node;
         _lineIndex = 0;
@@ -48,6 +50,12 @@ public class DialogueManager : MonoBehaviour
     void Update()
     {
         // Листать фразы на Пробел (только если не открыт выбор или инвентарь)
+        if (dialoguePanel.activeSelf || (inventoryPanel != null && inventoryPanel.activeSelf))
+        {
+            Cursor.lockState = CursorLockMode.None; // Разблокируем курсор
+            Cursor.visible = true;                 // Делаем его видимым
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && !_isTyping && dialoguePanel.activeSelf && !_isAskingAboutItem)
         {
             if (_currentNode.lines[_lineIndex].choices.Length == 0)
@@ -179,6 +187,8 @@ public class DialogueManager : MonoBehaviour
         StopAllCoroutines();
         dialoguePanel.SetActive(false);
         if (inventoryPanel != null) inventoryPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked; // Заблокировать в центре
+        Cursor.visible = false;
         _isTyping = false;
         _isAskingAboutItem = false;
     }
