@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.02
+      value: 4.5669837
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00000047683716
+      value: 3.0858698
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.56
+      value: 1.7975692
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -52,15 +52,15 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 16327acab88350b41b7ab475bd4bdb45, type: 2}
-    - target: {fileID: -3282896724188389522, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 16327acab88350b41b7ab475bd4bdb45, type: 2}
     - target: {fileID: 919132149155446097, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: m_Name
       value: Doorway1
       objectReference: {fileID: 0}
     - target: {fileID: 7179931909900733945, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 16327acab88350b41b7ab475bd4bdb45, type: 2}
+    - target: {fileID: 8154423001637701202, guid: 37b15e77d074ec24a81d7722317c8bf8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 16327acab88350b41b7ab475bd4bdb45, type: 2}
